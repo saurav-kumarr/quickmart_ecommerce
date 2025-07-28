@@ -1,14 +1,14 @@
 package com.quickmart.service;
 
 import com.quickmart.model.Category;
-
-import java.util.List;
+import com.quickmart.payload.CategoryDTO;
+import com.quickmart.payload.CategoryResponse;
 
 
 public interface CategoryService {
 
-    List<Category> getAllCategories();
-    void createCategory(Category category);
+    CategoryResponse getAllCategories();
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
     String deleteCategory(Long categoryId);
     Category updateCategory(Category category, Long categoryId);
 }
