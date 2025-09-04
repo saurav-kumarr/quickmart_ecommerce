@@ -50,7 +50,7 @@ public class JwtUtils {
 
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
         if(cookie != null){
-            System.out.println("COOKIE: " + cookie.getValue());
+           // System.out.println("COOKIE: " + cookie.getValue());
             return cookie.getValue();
         } else {
             return null;
