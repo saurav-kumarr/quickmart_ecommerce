@@ -1,8 +1,11 @@
 package com.quickmart.controller;
 
 
+import com.quickmart.model.Cart;
 import com.quickmart.payload.CartDTO;
+import com.quickmart.repositories.CartRepository;
 import com.quickmart.service.CartService;
+import com.quickmart.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class CartController {
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private AuthUtil authUtil;
 
     @Autowired
     private CartService cartService;
@@ -30,4 +39,17 @@ public class CartController {
         List<CartDTO> cartDTOs = cartService.getAllCarts();
         return new ResponseEntity<List<CartDTO>>(cartDTOs, HttpStatus.FOUND);
     }
+
+    @GetMapping("/carts/user/cart")
+    public ResponseEntity<CartDTO> getCartById(){
+
+        String emailId = authUtil.loggedInEmail();
+        Cart cart = cartRepository.findCartByEmail(emailId);
+        Long cartId = cart.getCartId();
+        CartDTO  cartDTO = cartService.getCart(emailId,cartId);
+        return new ResponseEntity<CartDTO>(cartDTO,HttpStatus.OK);
+
+    }
+
+
 }
