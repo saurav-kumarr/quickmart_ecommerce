@@ -5,6 +5,7 @@ import com.quickmart.model.Address;
 import com.quickmart.model.User;
 import com.quickmart.payload.AddressDTO;
 import com.quickmart.repositories.AddressRepository;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,4 +54,16 @@ public class AddressServiceImpl implements AddressService{
 
         return modelMapper.map(address,AddressDTO.class);
     }
+
+    @Override
+    public List<AddressDTO> getUserAddress(User user) {
+
+        List<Address> addresses = user.getAddresses();
+        List<AddressDTO> addressDTOS =  addresses.stream()
+                .map(address -> modelMapper.map(address, AddressDTO.class))
+                .collect(Collectors.toList());
+        return addressDTOS;
+    }
+
+
 }
