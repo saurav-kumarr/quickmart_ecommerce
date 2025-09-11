@@ -1,5 +1,6 @@
 package com.quickmart.service;
 
+import com.quickmart.exceptions.ResourceNotFoundException;
 import com.quickmart.model.Address;
 import com.quickmart.model.User;
 import com.quickmart.payload.AddressDTO;
@@ -42,5 +43,14 @@ public class AddressServiceImpl implements AddressService{
                 .map(address -> modelMapper.map(address, AddressDTO.class))
                 .collect(Collectors.toList());
         return addressDTOS;
+    }
+
+    @Override
+    public AddressDTO getAddressById(Long addressId) {
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address","addressId",addressId));
+
+        return modelMapper.map(address,AddressDTO.class);
     }
 }
