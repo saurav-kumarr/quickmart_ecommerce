@@ -77,10 +77,13 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
-                               // .requestMatchers("/api/public/**").permitAll()
+                                .requestMatchers("/api/public/**").permitAll()
                               //  .requestMatchers("/api/admin/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/api/images/**").permitAll()
+
+
 
                 .anyRequest().authenticated());
             http.authenticationProvider(authenticationProvider());
