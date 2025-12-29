@@ -3,6 +3,7 @@ package com.quickmart.controller;
 
 import com.quickmart.model.Cart;
 import com.quickmart.payload.CartDTO;
+import com.quickmart.payload.CartItemDTO;
 import com.quickmart.repositories.CartRepository;
 import com.quickmart.service.CartService;
 import com.quickmart.util.AuthUtil;
@@ -25,6 +26,13 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    @PostMapping("/cart/create")
+    public ResponseEntity<String> createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems){
+        String response = cartService.createOrUpdateCartWithItems(cartItems);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+    }
 
     @PostMapping("/carts/products/{productId}/quantity/{quantity}")
     public ResponseEntity<CartDTO> addProductToCart(@PathVariable Long productId,

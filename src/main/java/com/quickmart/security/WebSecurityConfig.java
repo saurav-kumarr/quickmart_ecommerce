@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,8 +67,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
          http.csrf(AbstractHttpConfigurer::disable);
-
-        http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+         http.cors(cors-> {})
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -82,6 +84,11 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/api/images/**").permitAll()
+                                .requestMatchers("/api/addresses/**").permitAll()
+                                .requestMatchers("/api/order/**").permitAll()
+                                .requestMatchers("/api/carts/**").permitAll()
+                                .requestMatchers("/api/cart/**").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 
 
 
@@ -89,6 +96,9 @@ public class WebSecurityConfig {
             http.authenticationProvider(authenticationProvider());
             http.addFilterBefore(authenticationJwtTokenFilter(),
                     UsernamePasswordAuthenticationFilter.class);
+            http.headers(headers -> headers.frameOptions(
+                    HeadersConfigurer.FrameOptionsConfig::sameOrigin
+            ));
 
             return http.build();
     }

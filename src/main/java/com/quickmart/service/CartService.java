@@ -1,6 +1,7 @@
 package com.quickmart.service;
 
 import com.quickmart.payload.CartDTO;
+import com.quickmart.payload.CartItemDTO;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface CartService {
     String deleteProductFromCart(Long cartId, Long productId);
 
     void updateProductInCarts(Long cartId, Long productId);
+
+    String createOrUpdateCartWithItems(List<CartItemDTO> cartItems);
 }
