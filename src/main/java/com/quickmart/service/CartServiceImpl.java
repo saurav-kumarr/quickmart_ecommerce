@@ -263,10 +263,12 @@ public class CartServiceImpl implements CartService{
 
     }
 
+    @Transactional
     @Override
     public String createOrUpdateCartWithItems(List<CartItemDTO> cartItems) {
         // Get user's email
         String emailId = authUtil.loggedInEmail();
+        System.out.println("emailId: " + emailId);
 
         // Check if an existing cart is available or create a new one
         Cart existingCart = cartRepository.findCartByEmail(emailId);

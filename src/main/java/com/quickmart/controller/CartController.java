@@ -48,7 +48,7 @@ public class CartController {
         return new ResponseEntity<List<CartDTO>>(cartDTOs, HttpStatus.FOUND);
     }
 
-    @GetMapping("/carts/user/cart")
+    @GetMapping("/carts/users/cart")
     public ResponseEntity<CartDTO> getCartById(){
 
         String emailId = authUtil.loggedInEmail();
