@@ -52,8 +52,8 @@ public class OrderServiceImpl implements OrderService{
             throw new ResourceNotFoundException("Cart","email", emailId);
         }
 
-        Address address = addressRepository.findById( addressId)
-                .orElseThrow(() -> new ResourceNotFoundException("Address","addressid",addressId));
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address","addressId",addressId));
 
 
         //Create a new order with payment info

@@ -32,6 +32,8 @@ public class OrderController {
                                                   @RequestBody OrderRequestDTO orderRequestDTO){
 
         String emailId = authUtil.loggedInEmail();
+        System.out.println("emailId: " + emailId);
+        System.out.println("OrderRequestDTO DATA:"+orderRequestDTO);
         OrderDTO order = orderService.placeOrder(
                 emailId,
                 orderRequestDTO.getAddressId(),
@@ -48,7 +50,7 @@ public class OrderController {
 
     @PostMapping("/order/stripe-client-secret")
     public ResponseEntity<String> createStripeClientSecret(@RequestBody StripePaymentDto stripePaymentDto) throws StripeException {
-
+        System.out.println("StripePaymentDto DATA:"+stripePaymentDto);
         PaymentIntent paymentIntent = stripeService.paymentIntent(stripePaymentDto);
         return new ResponseEntity<>(paymentIntent.getClientSecret(), HttpStatus.CREATED);
 

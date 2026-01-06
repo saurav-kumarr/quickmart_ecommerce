@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class AddressServiceImpl implements AddressService{
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
-    AddressRepository addressRepository;
+    private AddressRepository addressRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -29,14 +29,11 @@ public class AddressServiceImpl implements AddressService{
     @Override
     public AddressDTO createAddress(AddressDTO addressDTO, User user) {
         Address address = modelMapper.map(addressDTO, Address.class);
-
+        address.setUser(user);
         List<Address> addressList = user.getAddresses();
         addressList.add(address);
         user.setAddresses(addressList);
-
-        address.setUser(user);
         Address savedAddress = addressRepository.save(address);
-
         return modelMapper.map(savedAddress, AddressDTO.class);
     }
 

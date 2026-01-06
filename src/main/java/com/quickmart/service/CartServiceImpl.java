@@ -31,13 +31,13 @@ public class CartServiceImpl implements CartService{
     ProductRepository productRepository;
 
     @Autowired
-    CartItemRepository cartItemRepository;
+    private CartItemRepository cartItemRepository;
 
     @Autowired
     ModelMapper modelMapper;
 
     @Autowired
-    AuthUtil authUtil;
+    private AuthUtil authUtil;
 
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) {
@@ -276,7 +276,7 @@ public class CartServiceImpl implements CartService{
             existingCart = new Cart();
             existingCart.setTotalPrice(0.00);
             existingCart.setUser(authUtil.loggedInUser());
-            cartRepository.save(existingCart);
+            existingCart = cartRepository.save(existingCart);
         } else {
             // Clear all current items in the existing cart
             cartItemRepository.deleteAllByCartId(existingCart.getCartId());
