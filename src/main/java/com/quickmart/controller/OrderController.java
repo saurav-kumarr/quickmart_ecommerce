@@ -1,8 +1,10 @@
 package com.quickmart.controller;
 
 
+import com.quickmart.config.AppConstants;
 import com.quickmart.payload.OrderDTO;
 import com.quickmart.payload.OrderRequestDTO;
+import com.quickmart.payload.OrderResponse;
 import com.quickmart.payload.StripePaymentDto;
 import com.quickmart.service.OrderService;
 import com.quickmart.service.StripeService;
@@ -54,5 +56,16 @@ public class OrderController {
         PaymentIntent paymentIntent = stripeService.paymentIntent(stripePaymentDto);
         return new ResponseEntity<>(paymentIntent.getClientSecret(), HttpStatus.CREATED);
 
+    }
+
+    @GetMapping("/admin/orders")
+    public ResponseEntity<OrderResponse> getAllOrders(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_ORDERS_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIRECTION, required = false) String sortOrder
+    ){
+        OrderResponse orderResponse = orderService.getAllOrders(pageNumber, pageSize, sortBy, sortOrder);
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 }
