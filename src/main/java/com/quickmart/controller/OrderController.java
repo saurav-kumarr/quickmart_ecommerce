@@ -2,10 +2,8 @@ package com.quickmart.controller;
 
 
 import com.quickmart.config.AppConstants;
-import com.quickmart.payload.OrderDTO;
-import com.quickmart.payload.OrderRequestDTO;
-import com.quickmart.payload.OrderResponse;
-import com.quickmart.payload.StripePaymentDto;
+import com.quickmart.payload.*;
+import com.quickmart.security.services.UserDetailsImpl;
 import com.quickmart.service.OrderService;
 import com.quickmart.service.StripeService;
 import com.quickmart.util.AuthUtil;
@@ -14,6 +12,7 @@ import com.stripe.model.PaymentIntent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -67,5 +66,14 @@ public class OrderController {
     ){
         OrderResponse orderResponse = orderService.getAllOrders(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/orders/{orderId}/status")
+    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long orderId,
+                                                      @RequestBody OrderStatusUpdateDto orderStatusUpdateDto
+    ){
+       OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.getStatus());
+       return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
+
     }
 }
