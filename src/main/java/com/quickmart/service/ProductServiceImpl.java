@@ -72,6 +72,7 @@ public class ProductServiceImpl implements ProductService{
 
         if(isProductNotPresent) {
             Product product = modelMapper.map(productDTO, Product.class);
+            product.setActive(true);
             product.setImage("default.png");
             product.setCategory(category);
             double specialPrice = product.getPrice() -
@@ -93,7 +94,7 @@ public class ProductServiceImpl implements ProductService{
                 : Sort.by(sortBy).descending();
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Specification<Product> spec = Specification.where(null);
+        Specification<Product> spec = (root, query,criteriaBuilder) -> criteriaBuilder.isTrue(root.get("active"));
         if(keyword != null && !keyword.isEmpty()) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), "%" + keyword.toLowerCase() + "%"));
@@ -145,7 +146,7 @@ public class ProductServiceImpl implements ProductService{
                 : Sort.by(sortBy).descending();
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Page<Product> pageProducts = productRepository.findByCategoryOrderByPriceAsc(category, pageDetails);
+        Page<Product> pageProducts = productRepository.findByCategoryAndActiveTrueOrderByPriceAsc(category, pageDetails);
 
         List<Product> products = pageProducts.getContent();
 
@@ -175,7 +176,7 @@ public class ProductServiceImpl implements ProductService{
                 : Sort.by(sortBy).descending();
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-        Page<Product> pageProducts = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageDetails);
+        Page<Product> pageProducts = productRepository.findByProductNameLikeIgnoreCaseAndActiveTrue('%' + keyword + '%', pageDetails);
 
         List<Product> products = pageProducts.getContent();
         List<ProductDTO> productDTOS = products.stream()
@@ -236,7 +237,9 @@ public class ProductServiceImpl implements ProductService{
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
         List<Cart> carts = cartRepository.findCartsByProductId(productId);
         carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
-                productRepository.delete(product);
+               // productRepository.delete(product);
+                product.setActive(false);
+                productRepository.save(product);
         return modelMapper.map(product, ProductDTO.class);
     }
 
@@ -272,7 +275,7 @@ public class ProductServiceImpl implements ProductService{
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 
-        Page<Product> pageProducts = productRepository.findAll(pageDetails);
+        Page<Product> pageProducts = productRepository.findByActiveTrue(pageDetails);
 
         List<Product> products = pageProducts.getContent();
 

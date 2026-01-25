@@ -4,13 +4,6 @@ import com.quickmart.config.AppConstants;
 import com.quickmart.payload.CategoryDTO;
 import com.quickmart.payload.CategoryResponse;
 import com.quickmart.service.CategoryService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +37,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/public/categories")
+    @PostMapping("/admin/categories")
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
            CategoryDTO savedCategoryDTO =  categoryService.createCategory(categoryDTO);
 
@@ -60,7 +53,7 @@ public class CategoryController {
             return new ResponseEntity<>(deletedCategory, HttpStatus.OK);
     }
 
-    @PutMapping("/public/categories/{categoryId}")
+    @PutMapping("/admin/categories/{categoryId}")
     public ResponseEntity<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO,
                                                  @PathVariable Long categoryId){
 

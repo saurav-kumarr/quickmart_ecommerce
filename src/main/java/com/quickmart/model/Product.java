@@ -44,6 +44,9 @@ public class Product {
      @JoinColumn(name = "seller_id")
      private User user;
 
+     @Column(nullable = false)
+     private boolean active = true;
+
      @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST,CascadeType.MERGE}, fetch = FetchType.EAGER)
      private List<CartItem> products = new ArrayList<>();
 
