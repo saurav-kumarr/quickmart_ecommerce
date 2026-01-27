@@ -1,6 +1,7 @@
 package com.quickmart.controller;
 
 
+import com.quickmart.config.AppConstants;
 import com.quickmart.payload.AuthenticationResult;
 import com.quickmart.security.request.LoginRequest;
 import com.quickmart.security.request.SignupRequest;
@@ -8,6 +9,9 @@ import com.quickmart.security.response.MessageResponse;
 import com.quickmart.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +65,16 @@ public class AuthController {
                 cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
 
+    }
+
+    @GetMapping("/sellers")
+    public ResponseEntity<?> getAllSellers(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber
+    ) {
+            Sort sortByAndOrder = Sort.by(AppConstants.SORT_USERS_BY).descending();
+            Pageable pageDetails =  PageRequest.of(pageNumber, Integer.parseInt(AppConstants.PAGE_SIZE), sortByAndOrder);
+
+            return ResponseEntity.ok(authService.getAllSellers(pageDetails));
     }
 
 

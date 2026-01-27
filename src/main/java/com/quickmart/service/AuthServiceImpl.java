@@ -4,6 +4,8 @@ import com.quickmart.model.AppRole;
 import com.quickmart.model.Role;
 import com.quickmart.model.User;
 import com.quickmart.payload.AuthenticationResult;
+import com.quickmart.payload.UserDTO;
+import com.quickmart.payload.UserResponse;
 import com.quickmart.repositories.RoleRepository;
 import com.quickmart.repositories.UserRepository;
 import com.quickmart.security.jwt.JwtUtils;
@@ -13,7 +15,10 @@ import com.quickmart.security.response.MessageResponse;
 import com.quickmart.security.response.UserInfoResponse;
 import com.quickmart.security.services.UserDetailsImpl;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +48,9 @@ public class AuthServiceImpl implements AuthService{
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    ModelMapper modelMapper;
 
 
     @Override
@@ -150,6 +158,25 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public ResponseCookie logoutUser() {
         return jwtUtils.getCleanJwtCookie();
+    }
+
+    @Override
+    public UserResponse getAllSellers(Pageable pageable) {
+
+        Page<User> allUser =  userRepository.findByRoleName(AppRole.ROLE_SELLER, pageable);
+        List<UserDTO> userDTOS = allUser.getContent().stream()
+                .map(p -> modelMapper.map(p, UserDTO.class))
+                .toList();
+        UserResponse response = new UserResponse();
+        response.setContent(userDTOS);
+        response.setPageNumber(pageable.getPageNumber());
+        response.setPageSize(pageable.getPageSize());
+        response.setTotalElements(allUser.getTotalElements());
+        response.setTotalPages(allUser.getTotalPages());
+        response.setLastPage(allUser.isLast());
+
+
+        return response;
     }
 
 
