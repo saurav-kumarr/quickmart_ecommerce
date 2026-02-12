@@ -2,6 +2,7 @@ package com.quickmart.repositories;
 
 import com.quickmart.model.Category;
 import com.quickmart.model.Product;
+import com.quickmart.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product,Long>, JpaSpeci
     Page<Product> findByProductNameLikeIgnoreCaseAndActiveTrue(String keyword, Pageable pageDetails);
 
     Page<Product> findByActiveTrue(Pageable pageDetails);
+
+    Page<Product> findByUser(User user, Pageable pageDetails);
 }
