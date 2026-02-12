@@ -11,6 +11,7 @@ import com.quickmart.payload.ProductResponse;
 import com.quickmart.repositories.CartRepository;
 import com.quickmart.repositories.CategoryRepository;
 import com.quickmart.repositories.ProductRepository;
+import com.quickmart.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +49,9 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    AuthUtil authUtil;
+
     @Value("${project.image}")
     private String path;
 
@@ -75,6 +79,7 @@ public class ProductServiceImpl implements ProductService{
             product.setActive(true);
             product.setImage("default.png");
             product.setCategory(category);
+            product.setUser(authUtil.loggedInUser());
             double specialPrice = product.getPrice() -
                     ((product.getDiscount() * 0.01) * product.getPrice());
             product.setSpecialPrice(specialPrice);
